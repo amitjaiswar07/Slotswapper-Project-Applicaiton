@@ -1,0 +1,95 @@
+SlotSwapper - Technical Deep Dive & Code Examples
+Quick Start Guide
+Prerequisites
+Node.js 18+ and npm
+
+PostgreSQL 14+ (or use Docker)
+
+Git
+
+Local Development Setup
+bash
+# Clone repository
+git clone <repo-url>
+cd slotswapper
+
+# Install dependencies
+cd backend && npm install
+cd ../frontend && npm install
+
+# Setup environment variables
+cd ../backend
+cp .env.example .env
+# Edit .env with your configuration
+
+# Setup database
+createdb slotswapper
+npm run migrate
+
+# Start backend server
+npm run dev
+
+# In new terminal, start frontend
+cd frontend
+npm run dev
+
+# Application running at:
+# - Frontend: http://localhost:5173
+# - Backend: http://localhost:3000
+# - Database: localhost:5432
+Docker Setup
+bash
+# Build and run all services
+docker-compose up --build
+
+# Access:
+# - Frontend: http://localhost
+# - Backend: http://localhost:3000
+# - PostgreSQL: localhost:5432
+
+# Stop services
+docker-compose down
+
+# Reset database
+docker-compose down -v
+docker-compose up --build
+Core Implementation Details
+1. Authentication Deep Dive
+Backend: Password Hashing
+javascript
+// utils/password.js
+const bcrypt = require('bcrypt');
+
+async function hashPassword(password) {
+  // OWASP recommends 10+ rounds (10 = ~100ms, 12 = ~250ms)
+  const saltRounds = 10;
+  return await bcrypt.hash(password, saltRounds);
+}
+
+async function comparePassword(plainPassword, hashedPassword) {
+  return await bcrypt.compare(plainPassword, hashedPassword);
+}
+
+module.exports = { hashPassword, comparePassword };
+Backend: JWT Token Generation
+javascript
+// utils/jwt.js
+const jwt = require('jsonwebtoken');
+
+function generateAccessToken(userId, email) {
+  return jwt.sign(
+    { userId, email },
+    process.env.JWT_SECRET,
+    { expiresIn: '15m', algorithm: 'HS256' }
+  );
+}
+
+function generateRefreshToken(userId) {
+  return jwt.sign(
+    { userId },
+    process.env.JWT_REFRESH_SECRET,
+    { expiresIn: '7d', algorithm: 'HS256' }
+  );
+}
+
+function verifyToken(token
