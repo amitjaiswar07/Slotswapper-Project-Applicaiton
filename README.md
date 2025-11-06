@@ -3,6 +3,7 @@ Project Overview
 SlotSwapper is a peer-to-peer time-slot scheduling application that enables users to exchange calendar events with other users. The core innovation is the atomic swap mechanism that ensures both users' calendars are updated simultaneously, preventing conflicts or partial states.
 
 Architecture Overview
+<img width="2400" height="1600" alt="slotswapper_architecture" src="https://github.com/user-attachments/assets/a2bce2c5-f89f-4591-9c3f-2571f135c04c" />
 Tech Stack
 Frontend: React 18 + Vite, Context API for state management, Socket.io for real-time notifications
 
@@ -49,6 +50,7 @@ text
 └─────────────────────────────────────────────────────────────┘
 Database Schema
 Users Table
+
 sql
 CREATE TABLE users (
   id SERIAL PRIMARY KEY,
